@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * @author Austin Bruch
  * CNT4007C Spring 2015
@@ -7,6 +5,8 @@ import java.util.ArrayList;
  * 
  * Operation class
  */
+
+import java.util.ArrayList;
 
 public class Operation {
 
