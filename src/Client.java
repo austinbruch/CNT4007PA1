@@ -70,27 +70,6 @@ public class Client {
 			} catch (IOException e) {
 				this.quit();
 			}
-
-			//			while((inputFromServer = this.bufferedReaderFromServer.readLine()) != null) {
-			//				System.out.println(inputFromServer);
-			//				if (inputFromServer.equals("-5")) {
-			//					this.quit();
-			//				}
-			//				break;
-			//			}
-			//			
-			//			if (this.socket.isClosed()) {
-			//				this.quit();
-			//			}
-			//			
-			//			while((inputFromUser = this.bufferedReaderInputFromUser.readLine()) != null) {
-			//				writeToServer(inputFromUser);
-			//				break;
-			//			}
-			//			
-			//			if (this.socket.isClosed()) {
-			//				this.quit();
-			//			}
 		}
 	}
 
