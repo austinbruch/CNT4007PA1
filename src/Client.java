@@ -29,11 +29,6 @@ public class Client {
 	private String serverAddress;
 	private int serverPort;
 
-	//	private ServerListenerThread serverListenerThread;
-	//
-	//	private UserListenerThread userListenerThread;
-
-
 	public Client() {
 
 	}
@@ -60,12 +55,6 @@ public class Client {
 
 		String inputFromServer = null;
 		String inputFromUser = null;
-
-		//		this.serverListenerThread = new ServerListenerThread(this);
-		//		serverListenerThread.start();
-		//
-		//		this.userListenerThread = new UserListenerThread(this);
-		//		userListenerThread.start();
 
 		while(true) {
 			inputFromServer = this.bufferedReaderFromServer.readLine();
@@ -127,55 +116,4 @@ public class Client {
 		Client client = new Client(args[0], args[1]);
 		client.launch();
 	}
-
-	//	class ServerListenerThread extends Thread {
-	//
-	//		private Client client;
-	//
-	//		public ServerListenerThread(Client client) {
-	//			this.client = client;
-	//		}
-	//
-	//		@Override
-	//		public void run() {
-	//			try {
-	//				String inputFromServer = null;
-	//
-	//				while(!this.isInterrupted() && (inputFromServer = this.client.bufferedReaderFromServer.readLine()) != null) {
-	//					System.out.println(inputFromServer);
-	//					if (inputFromServer.equals("-5")) {
-	//						this.client.quit();
-	//					}
-	//				}
-	//			} catch (IOException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//
-	//	}
-	//
-	//	class UserListenerThread extends Thread {
-	//
-	//		private Client client;
-	//
-	//		public UserListenerThread(Client client) {
-	//			this.client = client;
-	//		}
-	//
-	//		@Override
-	//		public void run() {
-	//			try {
-	//				String inputFromUser = null;
-	//
-	//				while(!this.isInterrupted() && (inputFromUser = this.client.bufferedReaderInputFromUser.readLine()) != null) {
-	//
-	//					writeToServer(inputFromUser);
-	//
-	//				}
-	//			} catch (IOException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//	}
-
 }
