@@ -18,15 +18,6 @@ public class Operation {
 	private ArrayList<Integer> integers;
 
 	/**
-	 * Default Constructor
-	 * No instance variables are set
-	 */
-	public Operation() {
-		this.operator = null;
-		this.integers = new ArrayList<Integer>();
-	}
-
-	/**
 	 * Constructor
 	 * @param operator - String representing the operation to be performed
 	 * @param integers - ArrayList<Integer> that contains all of the Integers to be used for the operation

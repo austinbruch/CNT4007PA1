@@ -20,14 +20,14 @@ public class ClientConnection implements Runnable {
 
 	private static String CRLF = "\r\n";
 	private boolean DEBUG = false;
-	
+
 	private Server server;
 	private Socket socket;
 	private InputStream inputStream;
 	private BufferedReader bufferedReader;
 	private DataOutputStream dataOutputStream;
 	private ArrayList<String> operators;
-	
+
 	private boolean terminateFlag, byeFlag;
 
 	public ClientConnection(Server server, Socket socket) {
@@ -40,11 +40,11 @@ public class ClientConnection implements Runnable {
 		this.terminateFlag = false;
 		this.byeFlag = false;
 	}
-	
+
 	@Override
 	public void run() {
 		debug("run enter");
-		
+
 		try {
 			init();
 			System.out.println("get connection from " + this.socket.getInetAddress().getHostAddress());
@@ -64,7 +64,7 @@ public class ClientConnection implements Runnable {
 				System.out.println("get: " + inputFromClient + ", return: " + Integer.toString(result));
 
 				writeToClient(Integer.toString(result));
-				
+
 				if (byeFlag || terminateFlag) {
 					this.server.removeClientConnection(this);
 					break;
@@ -83,7 +83,7 @@ public class ClientConnection implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		debug("run exit");
 	}
 
@@ -112,7 +112,7 @@ public class ClientConnection implements Runnable {
 		debug("sayHello enter");
 
 		writeToClient("Hello!");
-		
+
 		debug("sayHello exit");
 
 	}
@@ -120,7 +120,7 @@ public class ClientConnection implements Runnable {
 
 	private Object checkForErrors(String input) {
 		debug("checkForErrors enter");
-		
+
 		int errorCode = 0;
 
 		HashMap<Integer, Boolean> errorMap = new HashMap<Integer, Boolean>();
@@ -192,10 +192,9 @@ public class ClientConnection implements Runnable {
 		} else if (errorMap.get(new Integer(-4))) {
 			errorCode = -4;
 		}
-		
+
 		if (errorCode == 0) {
 			// no errors were found
-//			Operation operation = new Operation(operator, integers.get(0), integers.get(1), integers.get(2), integers.get(3));
 			Operation operation = new Operation(operator, integers);
 
 			debug("checkForErrors exit");
@@ -222,15 +221,15 @@ public class ClientConnection implements Runnable {
 	private void writeToClient(String data) throws IOException {
 		this.dataOutputStream.writeBytes(data + CRLF);
 	}
-	
+
 	public void terminateConnection() throws Exception {
 		debug("terminateConnection enter");
-		
+
 		writeToClient("-5");
-		
+
 		debug("terminateConnection exit");
 	}
-	
+
 	private void debug(String message) {
 		if(DEBUG) {
 			System.out.println("[DEBUG] " + message);

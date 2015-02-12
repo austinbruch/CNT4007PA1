@@ -29,22 +29,41 @@ public class Client {
 	private String serverAddress;
 	private int serverPort;
 
-	public Client() {
-
-	}
-
+	/**
+	 * Constructor
+	 * @param serverAddress - String representing the host name (domain) of the server
+	 * @param serverPort - integer representing the port which the server is running on
+	 */
 	public Client(String serverAddress, int serverPort) {
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 	}
 
+	/**
+	 * Constructor
+	 * @param serverAddress - String representing the host name (domain) of the server
+	 * @param serverPort - String representing the port on which the server is running
+	 */
 	public Client(String serverAddress, String serverPort) {
 		this.serverAddress = serverAddress;
-		this.serverPort = Integer.parseInt(serverPort);
+		try {
+			this.serverPort = Integer.parseInt(serverPort);
+		} catch (NumberFormatException nfe) {
+			System.out.println("The supplied port number couldn't be parsed as an Integer."); // The port number couldn't be parsed as an integer
+			System.exit(0);
+		}
 	}
 
 	public void launch() throws UnknownHostException, IOException {
-		this.socket = new Socket(this.serverAddress, this.serverPort);
+		try {
+			this.socket = new Socket(this.serverAddress, this.serverPort);
+		} catch (UnknownHostException uhe) {
+			System.out.println("The IP address for " + this.serverAddress + " could not be determined."); // Server Address is bad
+			System.exit(0);
+		} catch (IOException ioe) {
+			System.out.println("An I/O error has occurred while creating the socket.");
+			System.exit(0);
+		}
 
 		this.inputStreamFromServer = this.socket.getInputStream();
 		this.bufferedReaderFromServer = new BufferedReader(new InputStreamReader(this.inputStreamFromServer));
@@ -92,7 +111,11 @@ public class Client {
 	}
 
 	public static void main(String... args) throws Exception {
-		Client client = new Client(args[0], args[1]);
-		client.launch();
+		if(args.length == 2) {
+			Client client = new Client(args[0], args[1]);
+			client.launch();
+		} else {
+			System.out.println("Usage:\njava Client [serverAddress] [portNumber]");
+		}
 	}
 }
