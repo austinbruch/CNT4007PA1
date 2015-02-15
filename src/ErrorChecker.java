@@ -1,6 +1,13 @@
+/**
+ * @author Austin Bruch
+ * CNT4007C Spring 2015
+ * Programming Assignment 1
+ * 
+ * ErrorChecker class
+ */
+
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
 
 public class ErrorChecker {
 
