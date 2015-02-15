@@ -45,7 +45,7 @@ public class ClientConnection implements Runnable {
 			String inputFromClient = null;
 			while ((inputFromClient = this.bufferedReader.readLine()) != null) {
 				int result = 0;
-				
+
 				ErrorChecker errorChecker = new ErrorChecker();
 				int errorCode = errorChecker.checkForErrors(inputFromClient);
 				if(errorCode < 0) {
@@ -119,28 +119,28 @@ public class ClientConnection implements Runnable {
 	 */
 	private Operation buildOperation(String input) {
 		debug("buildOperation enter");
-		
+
 		Operation toReturn = new Operation();
-		
+
 		String operator = null;
 		ArrayList<Integer> ints = new ArrayList<Integer>();
-		
+
 		StringTokenizer tokenizer = new StringTokenizer(input, " ");
 		operator = tokenizer.nextToken();
-		
+
 		String tmp = null;
 		while(tokenizer.hasMoreTokens()) {
 			tmp = tokenizer.nextToken();
 			ints.add(Integer.parseInt(tmp));
 		}
-		
+
 		toReturn.setOperator(operator);
 		toReturn.setIntegers(ints);
-		
+
 		debug("buildOperation exit");
 		return toReturn;
 	}
-	
+
 	private int processRequest(Operation operation) {
 		debug("processRequest enter");
 

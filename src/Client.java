@@ -85,7 +85,7 @@ public class Client {
 			inputFromUser = this.bufferedReaderInputFromUser.readLine();
 
 			try  {
-			 	writeToServer(inputFromUser);
+				writeToServer(inputFromUser);
 			} catch (IOException e) {
 				this.quit();
 			}

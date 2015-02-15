@@ -69,7 +69,7 @@ public class ErrorChecker {
 			}
 		}
 
-	return errorCode;
+		return errorCode;
 
 	}
 
@@ -127,7 +127,7 @@ public class ErrorChecker {
 		String operator = tokenizer.nextToken();
 
 		if(operator.equals("bye") || operator.equals("terminate")) {
-			
+
 		} else if(tokenizer.countTokens() < 2) {
 			// Since we've already called nextToken to get the operator, if it can't be called 2 more times, there's not enough arguments in the string
 			toReturn = true;

@@ -14,7 +14,7 @@ public class Operation {
 	 * Instance variables that represent which operator is to be used, and the value of the four possible arguments
 	 */
 	private String operator;
-	
+
 	private boolean disconnectClient;
 	private boolean terminateServer;
 
@@ -29,7 +29,7 @@ public class Operation {
 		this.disconnectClient = false;
 		this.terminateServer = false;
 	}
-	
+
 	/**
 	 * Constructor
 	 * @param operator - String representing the operation to be performed
@@ -41,7 +41,7 @@ public class Operation {
 		this.disconnectClient = false;
 		this.terminateServer = false;
 	}
-	
+
 	/**
 	 * Used as flags for the ClientConnection to see if the operation was "bye" or "terminate"
 	 * @return
@@ -79,7 +79,7 @@ public class Operation {
 	 */
 	public Integer doOperation() {
 		Integer toReturn = 0; // Integer container for the result to return
-		
+
 		if(operator.equals("bye")) { // If the operator is bye
 			toReturn = -5; // Return -5 as the result for the bye operation
 			this.disconnectClient = true; // Need to disconnect this client
