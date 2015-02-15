@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class ClientConnection implements Runnable {
@@ -26,46 +25,41 @@ public class ClientConnection implements Runnable {
 	private InputStream inputStream;
 	private BufferedReader bufferedReader;
 	private DataOutputStream dataOutputStream;
-	private ArrayList<String> operators;
-
-	private boolean terminateFlag, byeFlag;
 
 	public ClientConnection(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
-		this.operators = new ArrayList<String>();
-		this.operators.add("add");
-		this.operators.add("subtract");
-		this.operators.add("multiply");
-		this.terminateFlag = false;
-		this.byeFlag = false;
 	}
 
 	@Override
 	public void run() {
 		debug("run enter");
+		Operation operation = null;
 
 		try {
 			init();
-			System.out.println("get connection from " + this.socket.getInetAddress().getHostAddress());
+			System.out.println("get connection from " + this.socket.getInetAddress().getHostAddress() + ":" + Integer.toString(this.socket.getPort()));
 
 			sayHello();
 
 			String inputFromClient = null;
 			while ((inputFromClient = this.bufferedReader.readLine()) != null) {
 				int result = 0;
-				Object errorResult = checkForErrors(inputFromClient);
-				if (errorResult instanceof Operation) {
-					result = processRequest((Operation)errorResult); // if checkForErrors returns a Operation object, no errors were found
+				
+				ErrorChecker errorChecker = new ErrorChecker();
+				int errorCode = errorChecker.checkForErrors(inputFromClient);
+				if(errorCode < 0) {
+					result = errorCode;
 				} else {
-					result = (Integer) errorResult; // checkForErrors returned an integer (error code)
+					operation = buildOperation(inputFromClient);
+					result = processRequest(operation);
 				}
 
 				System.out.println("get: " + inputFromClient + ", return: " + Integer.toString(result));
 
 				writeToClient(Integer.toString(result));
 
-				if (byeFlag || terminateFlag) {
+				if(operation.disconnectClient() || operation.terminateServer()) {
 					this.server.removeClientConnection(this);
 					break;
 				}
@@ -77,7 +71,7 @@ public class ClientConnection implements Runnable {
 
 		try {
 			breakDown();
-			if(terminateFlag) {
+			if(operation.terminateServer()) {
 				this.server.terminate();
 			}
 		} catch (Exception e) {
@@ -117,96 +111,36 @@ public class ClientConnection implements Runnable {
 
 	}
 
-
-	private Object checkForErrors(String input) {
-		debug("checkForErrors enter");
-
-		int errorCode = 0;
-
-		HashMap<Integer, Boolean> errorMap = new HashMap<Integer, Boolean>();
-
-		errorMap.put(new Integer(-1), new Boolean(false));
-		errorMap.put(new Integer(-2), new Boolean(false));
-		errorMap.put(new Integer(-3), new Boolean(false));
-		errorMap.put(new Integer(-4), new Boolean(false));
-		errorMap.put(new Integer(-5), new Boolean(false));
-
-		StringTokenizer tokenizer = new StringTokenizer(input, " ");
-
-		int tokenCount = tokenizer.countTokens();
-
-		if (tokenCount > 5) {
-			errorMap.put(new Integer(-3), new Boolean(true));
-		} else if (tokenCount < 3) {
-			errorMap.put(new Integer(-2), new Boolean(true));
-		}
-
-		ArrayList<String> arguments = new ArrayList<String>();
-		ArrayList<Integer> integers = new ArrayList<Integer>();
-
-		int i;
-		for (i = 0; i < tokenCount; i++) {
-			arguments.add(tokenizer.nextToken());
-		}
-
+	/**
+	 * Builds the Operation object to represent the desired operation
+	 * It is assumed that the input has been checked for errors
+	 * @param input String input that will be parsed to build the Operation object
+	 * @return
+	 */
+	private Operation buildOperation(String input) {
+		debug("buildOperation enter");
+		
+		Operation toReturn = new Operation();
+		
 		String operator = null;
-
-		operator = arguments.get(0);
-
-		if (!operators.contains(operator)) {
-			if(operator.equals("bye") && tokenCount == 1) {
-				// client process is to exit, but server is to remain running
-				errorMap.put(new Integer(-5), new Boolean(true));
-				this.byeFlag = true;
-			} else if (operator.equals("terminate")  && tokenCount == 1) {
-				// both client (all clients) and server must shut down
-				errorMap.put(new Integer(-5), new Boolean(true)); // TODO QUIT CLIENTS
-				this.terminateFlag = true;
-			} else {
-				// the operator is not a valid operator
-				errorMap.put(new Integer(-1), new Boolean(true));
-			}
-		} 
-
-		int j;
-		for (j = 0; j < 4; j++) {
-			try {
-				if (j >= tokenCount-1) {
-					integers.add(null);
-				} else {
-					integers.add(Integer.parseInt(arguments.get(j+1)));
-				}
-			} catch (NumberFormatException nfe) {
-				errorMap.put(new Integer(-4), new Boolean(true));
-			}
+		ArrayList<Integer> ints = new ArrayList<Integer>();
+		
+		StringTokenizer tokenizer = new StringTokenizer(input, " ");
+		operator = tokenizer.nextToken();
+		
+		String tmp = null;
+		while(tokenizer.hasMoreTokens()) {
+			tmp = tokenizer.nextToken();
+			ints.add(Integer.parseInt(tmp));
 		}
-
-		if (errorMap.get(new Integer(-5))) {
-			errorCode = -5;
-		} else if (errorMap.get(new Integer(-1))) {
-			errorCode = -1;
-		} else if (errorMap.get(new Integer(-2))) {
-			errorCode = -2;
-		} else if (errorMap.get(new Integer(-3))) {
-			errorCode = -3;
-		} else if (errorMap.get(new Integer(-4))) {
-			errorCode = -4;
-		}
-
-		if (errorCode == 0) {
-			// no errors were found
-			Operation operation = new Operation(operator, integers);
-
-			debug("checkForErrors exit");
-			return operation;
-		} else {
-			// errors were found
-			debug("checkForErrors exit");
-			return new Integer(errorCode);
-		}
-
+		
+		toReturn.setOperator(operator);
+		toReturn.setIntegers(ints);
+		
+		debug("buildOperation exit");
+		return toReturn;
 	}
-
+	
 	private int processRequest(Operation operation) {
 		debug("processRequest enter");
 

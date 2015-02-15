@@ -50,7 +50,6 @@ public class Server {
 	public void terminate() {
 		try {
 			this.terminateAllClientConnections();
-//			listenSocket.close();
 			System.out.println("The server is now exiting gracefully.");
 			System.exit(0);
 		} catch (Exception e) {

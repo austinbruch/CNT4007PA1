@@ -14,9 +14,22 @@ public class Operation {
 	 * Instance variables that represent which operator is to be used, and the value of the four possible arguments
 	 */
 	private String operator;
+	
+	private boolean disconnectClient;
+	private boolean terminateServer;
 
 	private ArrayList<Integer> integers;
 
+	/**
+	 * Default Constructor
+	 */
+	public Operation() {
+		this.operator = null;
+		this.integers = null;
+		this.disconnectClient = false;
+		this.terminateServer = false;
+	}
+	
 	/**
 	 * Constructor
 	 * @param operator - String representing the operation to be performed
@@ -25,8 +38,21 @@ public class Operation {
 	public Operation(String operator, ArrayList<Integer> integers) {
 		this.operator = operator;
 		this.integers = integers;
+		this.disconnectClient = false;
+		this.terminateServer = false;
+	}
+	
+	/**
+	 * Used as flags for the ClientConnection to see if the operation was "bye" or "terminate"
+	 * @return
+	 */
+	public boolean disconnectClient() {
+		return this.disconnectClient;
 	}
 
+	public boolean terminateServer() {
+		return this.terminateServer;
+	}
 
 	/**
 	 * Getters and Setters for all instance variables
@@ -35,8 +61,8 @@ public class Operation {
 		return operator;
 	}
 
-	public void setOperator(String operation) {
-		this.operator = operation;
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 	public ArrayList<Integer> getIntegers() {
@@ -53,8 +79,15 @@ public class Operation {
 	 */
 	public Integer doOperation() {
 		Integer toReturn = 0; // Integer container for the result to return
-
-		if(operator.equals("add")) { // If the operator is addition
+		
+		if(operator.equals("bye")) { // If the operator is bye
+			toReturn = -5; // Return -5 as the result for the bye operation
+			this.disconnectClient = true; // Need to disconnect this client
+		} else if(operator.equals("terminate")) { // If the operator is terminate
+			toReturn = -5; // Return -5 as the result for the terminate operation
+			this.disconnectClient = true; // Need to disconnect this client 
+			this.terminateServer = true; // Need to terminate the server
+		} else if(operator.equals("add")) { // If the operator is addition
 			for(Integer i : this.integers) {
 				if(i != null) {
 					toReturn += i; // Simply add each Integer to the others
