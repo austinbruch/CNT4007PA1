@@ -22,33 +22,33 @@ public class ErrorChecker {
 		}
 	}
 
+	/**
+	 * 
+	 * -1: incorrect operation command.
+	 * -2: number of inputs is less than two.
+	 * -3: number of inputs is more than four.
+	 * -4: one or more of the inputs contain(s) non-number(s).
+	 * -5: exit.
+	 * 
+	 * logic flow for error checking
+	 * 
+	 * check to see if the input is empty
+	 * 		if it's empty, return error code -1
+	 * 
+	 * then check to see if the command is malformed
+	 * 		if so, return error code -1
+	 * 
+	 * then check to see if the command has less than 2 inputs
+	 * 		if so, return the error code -2
+	 * 
+	 * then check to see if the command has more than 4 inputs
+	 * 		if so, return the error code -3
+	 * 
+	 * then check to see if the command uses non-number inputs
+	 * 		if so, return the error code -4
+	 * 
+	 */
 	public int checkForErrors(String input) {
-		/**
-		 * 
-		 * -1: incorrect operation command.
-		 * -2: number of inputs is less than two.
-		 * -3: number of inputs is more than four.
-		 * -4: one or more of the inputs contain(s) non-number(s).
-		 * -5: exit.
-		 * 
-		 * logic flow for error checking
-		 * 
-		 * check to see if the input is empty
-		 * 		if it's empty, return error code -1
-		 * 
-		 * then check to see if the command is malformed
-		 * 		if so, return error code -1
-		 * 
-		 * then check to see if the command has less than 2 inputs
-		 * 		if so, return the error code -2
-		 * 
-		 * then check to see if the command has more than 4 inputs
-		 * 		if so, return the error code -3
-		 * 
-		 * then check to see if the command uses non-number inputs
-		 * 		if so, return the error code -4
-		 * 
-		 */
 
 		int errorCode = 0;
 
