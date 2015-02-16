@@ -69,6 +69,4 @@ public class Server {
 			cc.terminateConnection();
 		}
 	}
-
 }
-
