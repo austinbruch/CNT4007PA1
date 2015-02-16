@@ -33,6 +33,7 @@ public class ClientConnection implements Runnable {
 	public ClientConnection(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
+		
 		try {
 			FileHandler handler = new FileHandler("../log/ClientConnection.log", false);
 			handler.setFormatter(new SimpleFormatter());
@@ -43,13 +44,14 @@ public class ClientConnection implements Runnable {
 		} catch (IOException ioe) {
 			System.out.println("Couldn't setup the File Handler for the ClientConnection Logger");
 		}
+		
 	}
 
 	@Override
 	public void run() {
 		String methodName = "run";
-
 		LOGGER.entering(getClass().getName(), methodName);
+		
 		Operation operation = null;
 
 		try {
