@@ -91,8 +91,10 @@ public class ClientConnection implements Runnable {
 
 		try {
 			breakDown();
-			if(operation.terminateServer()) {
-				this.server.terminate();
+			if(operation != null) {
+				if(operation.terminateServer()) {
+					this.server.terminate();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,9 +118,9 @@ public class ClientConnection implements Runnable {
 		String methodName = "breakDown";
 		LOGGER.entering(getClass().getName(), methodName);
 
-		this.bufferedReader.close();
-		this.inputStream.close();
-		this.dataOutputStream.close();
+//		this.bufferedReader.close();
+//		this.inputStream.close();
+//		this.dataOutputStream.close();
 		this.socket.close();
 
 		LOGGER.exiting(getClass().getName(), methodName);
@@ -188,8 +190,8 @@ public class ClientConnection implements Runnable {
 		String methodName = "terminateConnection";
 		LOGGER.entering(getClass().getName(), methodName);
 
-		writeToClient("-5");
-
+		writeToClient("-6");
+		
 		LOGGER.exiting(getClass().getName(), methodName);
 	}
 }

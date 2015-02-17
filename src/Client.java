@@ -6,6 +6,8 @@
  * Client class
  */
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,6 +30,8 @@ public class Client {
 
 	private String serverAddress;
 	private int serverPort;
+	
+	private Thread fromUserThread;
 
 	/**
 	 * Constructor
@@ -74,21 +78,30 @@ public class Client {
 
 		String inputFromServer = null;
 		String inputFromUser = null;
+		
+		this.fromUserThread = new FromUserThread(this);
+		this.fromUserThread.start();
 
 		while(true) {
 			inputFromServer = this.bufferedReaderFromServer.readLine();
-			System.out.println(inputFromServer);
 			if (inputFromServer.equals("-5")) {
-				this.quit();
+				System.out.println(inputFromServer);
+				this.quit("exit");
+			} else if(inputFromServer.equals("-6")) {
+				inputFromServer = "-5";
+				System.out.println(inputFromServer);
+				this.quit("The Server has exited.");
+			} else {
+				System.out.println(inputFromServer);
 			}
 
-			inputFromUser = this.bufferedReaderInputFromUser.readLine();
-
-			try  {
-				writeToServer(inputFromUser);
-			} catch (IOException e) {
-				this.quit();
-			}
+//			inputFromUser = this.bufferedReaderInputFromUser.readLine();
+//
+//			try  {
+//				writeToServer(inputFromUser);
+//			} catch (IOException e) {
+//				this.quit("The Server has exited.");
+//			}
 		}
 	}
 
@@ -96,17 +109,29 @@ public class Client {
 		this.dataOutputStreamToServer.writeBytes(inputFromUser + CRLF);
 	}
 
-	private void breakDown() throws IOException {
-		this.bufferedReaderInputFromUser.close();
-		this.dataOutputStreamToServer.close();
-		this.bufferedReaderFromServer.close();
-		this.inputStreamFromServer.close();
-		this.socket.close();
+	private void breakDown(){
+		
+		try {
+//			System.out.println("a");
+//			this.bufferedReaderInputFromUser.close();
+//			System.out.println("b");
+//			this.dataOutputStreamToServer.close();
+//			System.out.println("c");
+//			this.bufferedReaderFromServer.close();
+//			System.out.println("d");
+//			this.inputStreamFromServer.close();
+//			System.out.println("e");
+			this.socket.close();
+//			System.out.println("f");
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
-	void quit() throws IOException {
-		System.out.println("exit");
+	void quit(String message) throws IOException {
+		System.out.println(message);
 		breakDown();
+//		System.out.println("breakDown() has been called.");
 		System.exit(0);
 	}
 
@@ -116,6 +141,33 @@ public class Client {
 			client.launch();
 		} else {
 			System.out.println("Usage:\njava Client [serverAddress] [portNumber]");
+		}
+	}
+
+
+	class FromUserThread extends Thread {
+
+		private Client client;
+
+		FromUserThread(Client client) {
+			this.client = client;
+		}
+
+		@Override
+		public void run() {
+			String inputFromUser = null;
+			try {
+				while(true) {
+					inputFromUser = this.client.bufferedReaderInputFromUser.readLine();
+					try  {
+						writeToServer(inputFromUser);
+					} catch (IOException e) {
+						this.client.quit("The Server has exited.");
+					}
+				}
+			} catch (IOException ioe) {
+				System.out.println(ioe.getMessage());
+			}
 		}
 	}
 }

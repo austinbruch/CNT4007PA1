@@ -63,10 +63,11 @@ public class Server {
 
 	private void terminateAllClientConnections() throws Exception {
 
-		System.out.println("This will eventually kill all threads.");
-		System.out.println("ClientConnection count: " + clientConnections.size());
+		ArrayList<ClientConnection> toRemove = new ArrayList<ClientConnection>();
 		for(ClientConnection cc : clientConnections) {
 			cc.terminateConnection();
+			toRemove.add(cc);
 		}
+		clientConnections.removeAll(toRemove);
 	}
 }
