@@ -190,7 +190,7 @@ public class ClientConnection implements Runnable {
 		String methodName = "terminateConnection";
 		LOGGER.entering(getClass().getName(), methodName);
 
-		writeToClient("-6");
+		writeToClient("-6"); // indicates terminated server instead of regular quit
 		
 		LOGGER.exiting(getClass().getName(), methodName);
 	}
