@@ -28,8 +28,10 @@ public class Client {
 
 	private String serverAddress;
 	private int serverPort;
-	
+
 	private Thread fromUserThread;
+
+	private String mostRecentCommand;
 
 	/**
 	 * Constructor
@@ -39,6 +41,7 @@ public class Client {
 	public Client(String serverAddress, int serverPort) {
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
+		this.mostRecentCommand = "";
 	}
 
 	/**
@@ -54,6 +57,7 @@ public class Client {
 			System.out.println("The supplied port number couldn't be parsed as an Integer."); // The port number couldn't be parsed as an integer
 			System.exit(0);
 		}
+		this.mostRecentCommand = "";
 	}
 
 	public void launch() throws UnknownHostException, IOException {
@@ -81,15 +85,14 @@ public class Client {
 
 		while(true) {
 			inputFromServer = this.bufferedReaderFromServer.readLine();
-			if (inputFromServer.equals("-5")) {
-				System.out.println(inputFromServer);
-				this.quit("exit");
-			} else if(inputFromServer.equals("-6")) {
-				inputFromServer = "-5";
-				System.out.println(inputFromServer);
-				this.quit("The Server has exited.");
-			} else {
-				System.out.println(inputFromServer);
+
+			System.out.println(inputFromServer);
+			if(inputFromServer.equals("-5")) {
+				if(this.mostRecentCommand.equals("terminate")) {
+					this.quit("exit");
+				} else {
+					this.quit("The Server has exited.");
+				}
 			}
 		}
 	}
@@ -99,7 +102,7 @@ public class Client {
 	}
 
 	private void breakDown(){
-		
+
 		try {
 			this.socket.close();
 		} catch (IOException e) {
@@ -139,6 +142,7 @@ public class Client {
 					inputFromUser = this.client.bufferedReaderInputFromUser.readLine();
 					try  {
 						writeToServer(inputFromUser);
+						this.client.mostRecentCommand = inputFromUser;
 					} catch (IOException e) {
 						this.client.quit("The Server has exited.");
 					}
