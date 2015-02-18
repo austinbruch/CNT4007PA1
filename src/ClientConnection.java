@@ -14,15 +14,10 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class ClientConnection implements Runnable {
 
 	private static String CRLF = "\r\n";
-	private static final Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
 
 	private Server server;
 	private Socket socket;
@@ -33,24 +28,10 @@ public class ClientConnection implements Runnable {
 	public ClientConnection(Server server, Socket socket) {
 		this.server = server;
 		this.socket = socket;
-		
-		try {
-			FileHandler handler = new FileHandler("../log/ClientConnection.log", false);
-			handler.setFormatter(new SimpleFormatter());
-			LOGGER.addHandler(handler);
-			handler.setLevel(Level.ALL);
-			LOGGER.setLevel(Level.ALL);
-			LOGGER.setUseParentHandlers(false);
-		} catch (IOException ioe) {
-			System.out.println("Couldn't setup the File Handler for the ClientConnection Logger");
-		}
-		
 	}
 
 	@Override
 	public void run() {
-		String methodName = "run";
-		LOGGER.entering(getClass().getName(), methodName);
 		
 		Operation operation = null;
 
@@ -100,39 +81,28 @@ public class ClientConnection implements Runnable {
 			e.printStackTrace();
 		}
 
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 
 	private void init() throws Exception {
-		String methodName = "init";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		this.inputStream = this.socket.getInputStream();
 		this.bufferedReader = new BufferedReader(new InputStreamReader(this.inputStream));
 		this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
 
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 
 	private void breakDown() throws Exception {
-		String methodName = "breakDown";
-		LOGGER.entering(getClass().getName(), methodName);
 
 //		this.bufferedReader.close();
 //		this.inputStream.close();
 //		this.dataOutputStream.close();
 		this.socket.close();
-
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 
 	private void sayHello() throws Exception {
-		String methodName = "sayHello";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		writeToClient("Hello!");
 
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 
 	/**
@@ -142,8 +112,6 @@ public class ClientConnection implements Runnable {
 	 * @return
 	 */
 	private Operation buildOperation(String input) {
-		String methodName = "buildOperation";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		Operation toReturn = new Operation();
 
@@ -162,36 +130,26 @@ public class ClientConnection implements Runnable {
 		toReturn.setOperator(operator);
 		toReturn.setIntegers(ints);
 
-		LOGGER.exiting(getClass().getName(), methodName);
 		return toReturn;
 	}
 
 	private int processRequest(Operation operation) {
-		String methodName = "processRequest";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		int toReturn = 0;
 		toReturn = operation.doOperation();
 
-		LOGGER.exiting(getClass().getName(), methodName);
 		return toReturn;
 	}
 
 	private void writeToClient(String data) throws IOException {
-		String methodName = "writeToClient";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		this.dataOutputStream.writeBytes(data + CRLF);
 
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 
 	public void terminateConnection() throws Exception {
-		String methodName = "terminateConnection";
-		LOGGER.entering(getClass().getName(), methodName);
 
 		writeToClient("-5"); // indicates terminated server instead of regular quit
 		
-		LOGGER.exiting(getClass().getName(), methodName);
 	}
 }
