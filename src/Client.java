@@ -90,6 +90,8 @@ public class Client {
 			if(inputFromServer.equals("-5")) {
 				if(this.mostRecentCommand.equals("terminate")) {
 					this.quit("exit");
+				} else if(this.mostRecentCommand.equals("bye")) {
+					this.quit("exit");
 				} else {
 					this.quit("The Server has exited.");
 				}
