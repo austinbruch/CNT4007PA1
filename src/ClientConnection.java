@@ -93,9 +93,6 @@ public class ClientConnection implements Runnable {
 
 	private void breakDown() throws Exception {
 
-//		this.bufferedReader.close();
-//		this.inputStream.close();
-//		this.dataOutputStream.close();
 		this.socket.close();
 	}
 
@@ -149,7 +146,7 @@ public class ClientConnection implements Runnable {
 
 	public void terminateConnection() throws Exception {
 
-		writeToClient("-5"); // indicates terminated server instead of regular quit
+		writeToClient("-5");
 		
 	}
 }
