@@ -95,13 +95,6 @@ public class Client {
 
 			if(inputFromServer.equals("-5")) {
 				this.quit();
-				// if(this.mostRecentCommand.equals("terminate")) {
-				// 	this.quit();
-				// } else if(this.mostRecentCommand.equals("bye")) {
-				// 	this.quit();
-				// } else {
-				// 	this.quit();
-				// }
 			}
 		}
 	}
