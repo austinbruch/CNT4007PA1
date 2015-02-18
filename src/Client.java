@@ -86,15 +86,22 @@ public class Client {
 		while(true) {
 			inputFromServer = this.bufferedReaderFromServer.readLine();
 
-			System.out.println(inputFromServer);
+			if(!inputFromServer.equals("Hello!")) {
+				String errorMessage = interpretErrorCode(Integer.parseInt(inputFromServer));
+				System.out.println(errorMessage);
+			} else {
+				System.out.println(inputFromServer);
+			}
+
 			if(inputFromServer.equals("-5")) {
-				if(this.mostRecentCommand.equals("terminate")) {
-					this.quit("exit");
-				} else if(this.mostRecentCommand.equals("bye")) {
-					this.quit("exit");
-				} else {
-					this.quit("The Server has exited.");
-				}
+				this.quit();
+				// if(this.mostRecentCommand.equals("terminate")) {
+				// 	this.quit();
+				// } else if(this.mostRecentCommand.equals("bye")) {
+				// 	this.quit();
+				// } else {
+				// 	this.quit();
+				// }
 			}
 		}
 	}
@@ -112,10 +119,43 @@ public class Client {
 		}
 	}
 
-	void quit(String message) throws IOException {
-		System.out.println(message);
+	private void quit() throws IOException {
 		breakDown();
 		System.exit(0);
+	}
+
+	private String interpretErrorCode(int errorCode) {
+		String errorMessage = "";
+
+		switch(errorCode) {
+			case -1:
+				errorMessage = "incorrect operation command";
+				break;
+			case -2:
+				errorMessage = "number of inputs is less than two";
+				break;
+			case -3:
+				errorMessage = "number of inputs is more than four";
+				break;
+			case -4:
+				errorMessage = "one or more of the inputs contain(s) non-number(s)";
+				break;
+			case -5:
+				if(this.mostRecentCommand.equals("terminate")) {
+					errorMessage = "exit";
+				} else if(this.mostRecentCommand.equals("bye")) {
+					errorMessage = "exit";
+				} else {
+					errorMessage = "The Server has exited.";
+				}
+				break;
+			default:
+				errorMessage = Integer.toString(errorCode);
+				break;
+		}
+
+		return errorMessage;
+
 	}
 
 	public static void main(String... args) throws Exception {
@@ -146,7 +186,7 @@ public class Client {
 						writeToServer(inputFromUser);
 						this.client.mostRecentCommand = inputFromUser;
 					} catch (IOException e) {
-						this.client.quit("The Server has exited.");
+						this.client.quit();
 					}
 				}
 			} catch (IOException ioe) {
