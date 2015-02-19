@@ -26,7 +26,7 @@ public class ClientConnection implements Runnable {
 	private DataOutputStream dataOutputStream; // DataOutputStream for the Socket
 
 	/**
-	 * Constructor
+	 * Constructor 
 	 * Creates a ClientConnection object given a reference to the Server and Socket that are to be used
 	 * @param server - Server reference
 	 * @param socket - Socket reference
@@ -179,9 +179,10 @@ public class ClientConnection implements Runnable {
 	 * Logically terminates the connection with the Client by sending the -5 error code to it 
 	 * @throws Exception
 	 */
-	public void terminateConnection() throws Exception {
+	public void terminateConnection() throws IOException {
 
 		writeToClient("-5");
 		
 	}
+	
 }
