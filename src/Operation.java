@@ -11,14 +11,15 @@ import java.util.ArrayList;
 public class Operation {
 
 	/**
-	 * Instance variables that represent which operator is to be used, and the value of the four possible arguments
+	 * Instance variables 
 	 */
-	private String operator;
+	
+	private String operator; // String that holds the operator value for this Operation instance
 
-	private boolean disconnectClient;
-	private boolean terminateServer;
+	private boolean disconnectClient; // Flag that is set when the Operation specifies to disconnect the Client ("bye")
+	private boolean terminateServer; // Flag that is set when the Operation specifies to terminate the Server ("terminate")
 
-	private ArrayList<Integer> integers;
+	private ArrayList<Integer> integers; // ArrayList of Integers that holds all arguments for this Operation
 
 	/**
 	 * Default Constructor
@@ -26,8 +27,8 @@ public class Operation {
 	public Operation() {
 		this.operator = null;
 		this.integers = null;
-		this.disconnectClient = false;
-		this.terminateServer = false;
+		this.disconnectClient = false; // Initially this flag must be false
+		this.terminateServer = false; // Initially this flag must be false
 	}
 
 	/**
@@ -38,18 +39,22 @@ public class Operation {
 	public Operation(String operator, ArrayList<Integer> integers) {
 		this.operator = operator;
 		this.integers = integers;
-		this.disconnectClient = false;
-		this.terminateServer = false;
+		this.disconnectClient = false; // Initially this flag must be false
+		this.terminateServer = false; // Initially this flag must be false
 	}
 
 	/**
-	 * Used as flags for the ClientConnection to see if the operation was "bye" or "terminate"
-	 * @return
+	 * Reads the Disconnect Client flag
+	 * @return this.disconnectClient
 	 */
 	public boolean disconnectClient() {
 		return this.disconnectClient;
 	}
 
+	/**
+	 * Reads the Terminate Server flag
+	 * @return this.terminateServer
+	 */
 	public boolean terminateServer() {
 		return this.terminateServer;
 	}
@@ -81,26 +86,35 @@ public class Operation {
 		Integer toReturn = 0; // Integer container for the result to return
 
 		if(operator.equals("bye")) { // If the operator is bye
+			
 			toReturn = -5; // Return -5 as the result for the bye operation
 			this.disconnectClient = true; // Need to disconnect this client
+			
 		} else if(operator.equals("terminate")) { // If the operator is terminate
+			
 			toReturn = -5; // Return -5 as the result for the terminate operation
 			this.disconnectClient = true; // Need to disconnect this client 
 			this.terminateServer = true; // Need to terminate the server
+			
 		} else if(operator.equals("add")) { // If the operator is addition
+			
 			for(Integer i : this.integers) {
 				if(i != null) {
 					toReturn += i; // Simply add each Integer to the others
 				}
 			}
+			
 		} else if(operator.equals("subtract")) { // If the operator is subtraction
+			
 			toReturn = this.integers.get(0); // Start with the first Integer
 			for(int i = 1; i < this.integers.size(); i++) {
 				if(this.integers.get(i) != null) {
 					toReturn -= this.integers.get(i); // Subtract each subsequent Integer from the previous total
 				}
 			}
+			
 		} else if(operator.equals("multiply")) { // If the operator is multiplication
+			
 			toReturn = 1; // Start with 1 since 1 * X = X
 			for(Integer i : this.integers) { 
 				if(i != null) {
@@ -111,5 +125,4 @@ public class Operation {
 
 		return toReturn;
 	}
-
 }
