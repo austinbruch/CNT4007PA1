@@ -101,9 +101,9 @@ public class Client {
 				inputFromServer = this.bufferedReaderFromServer.readLine(); // Block until the Server sends a line of data through the Socket to the Client 
 				if(!inputFromServer.equals("Hello!")) {
 					String errorMessage = interpretErrorCode(Integer.parseInt(inputFromServer)); // Get the correct error message
-					System.out.println(errorMessage); // This will still display the correct result if the input from Server wasn't an error code
+					System.out.println("receive: " + errorMessage); // This will still display the correct result if the input from Server wasn't an error code
 				} else {
-					System.out.println(inputFromServer); // Directly print Hello! if that's the message, no need for error parsing
+					System.out.println("receive: " + inputFromServer); // Directly print Hello! if that's the message, no need for error parsing
 				}
 				
 				if(inputFromServer.equals("-5")) { // If the Server send -5, we need to terminate this client
